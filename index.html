@@ -69,7 +69,7 @@ async function openDb(bytes,name){
    const cols=rows.length?rows[0].columns:[];const vals=rows.length?rows[0].values:[];
    const idx=n=>cols.findIndex(c=>c.toLowerCase()===n.toLowerCase());
    const get=(r,n)=>{const i=idx(n);return i<0?null:r[i]};
-   const total=vals.reduce((s,r)=>s+(Number(get(r,'total_faktur'))||0),0);
+   const total=vals.reduce((s,r)=>s+Math.max(0,(Number(get(r,'cash'))||0)-(Number(get(r,'change_pay'))||0))+(Number(get(r,'nom_topup'))||0),0);
    const dates=[...new Set(vals.map(r=>get(r,'date_tx')).filter(Boolean))];
    const users=[...new Set(vals.map(r=>get(r,'user_id')).filter(Boolean))];
    $('userid').textContent=users.join(', ')||'—';
@@ -112,7 +112,7 @@ function renderReceiptsFromDb(){
    }
  }
  rows.forEach((r,i)=>{
-   const faktur=String(val(r,'faktur')??'');const bill=faktur.split('-').pop()||String(i+1);
+   const faktur=String(val(r,'faktur')??'');const bill=faktur.slice(-4)||String(i+1);
    const receiptText=receiptMap.get(String(Number(bill)))||receiptMap.get(bill)||'';
    const d=document.createElement('details');d.className='receipt';
    const s=document.createElement('summary');const label=document.createElement('span');label.textContent=faktur||`Struk ${i+1}`;const chev=document.createElement('span');chev.className='chevron';chev.textContent='⌄';s.append(label,chev);
