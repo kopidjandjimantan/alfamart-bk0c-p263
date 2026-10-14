@@ -2,94 +2,143 @@
 <html lang="id">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Klerek-style DB Inspector</title>
+<title>ALFAMART BK0C P263 — Klerek Style</title>
 <style>
-:root{--blue:#2563eb;--ink:#172033;--muted:#667085;--line:#e5e7eb;--bg:#f5f7fb}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,Helvetica,sans-serif}
-header{background:#fff;border-bottom:1px solid var(--line);padding:16px 18px}.bar{max-width:900px;margin:auto;display:flex;align-items:center;gap:10px;font-weight:800}.logo{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--blue);color:#fff}
-main{width:min(900px,calc(100% - 26px));margin:30px auto 48px}.eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--blue);text-transform:uppercase}h1{font-size:clamp(26px,5vw,35px);margin:8px 0}p{line-height:1.55}.muted{color:var(--muted)}.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;margin-top:18px;box-shadow:0 5px 20px #10182808}
-.drop{display:block;text-align:center;border:2px dashed #b9c5d8;border-radius:13px;padding:24px 14px;background:#fbfcff;cursor:pointer}.drop b{display:block;margin:8px 0}.drop small{color:var(--muted)}input[type=file]{display:block;width:100%;margin-top:15px}
-.actions{display:flex;gap:10px;margin-top:16px}button{border:0;border-radius:10px;padding:12px 16px;font-weight:700;cursor:pointer}.primary{background:var(--blue);color:#fff;flex:1}.secondary{background:#edf1f7;color:#344054}button:disabled{opacity:.45;cursor:not-allowed}
-.status{margin-top:14px;padding:12px;border-radius:10px;background:#f2f4f7;font-size:13px;line-height:1.5;overflow-wrap:anywhere}.status.ok{background:#ecfdf3;color:#027a48}.status.warn{background:#fffaeb;color:#92400e}.status.err{background:#fef3f2;color:#b42318}
-.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}.tab{background:#eef2f7;color:#344054}.tab.active{background:#dbeafe;color:#1d4ed8}
-.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:10px;max-height:430px}table{border-collapse:collapse;width:100%;font-size:12px;white-space:nowrap}th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;max-width:260px;overflow:hidden;text-overflow:ellipsis}th{position:sticky;top:0;background:#f8fafc} .small{font-size:12px}.hidden{display:none}footer{text-align:center;color:#98a2b3;font-size:12px;padding:18px}
-@media(max-width:520px){.card{padding:15px}.actions{flex-direction:column}.actions button{width:100%}}
+:root{--bg:#07090e;--panel:#11151d;--line:#c9cbd0;--blue:#1764ff;--white:#f7f7f8;--muted:#9ca3af}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#293241 0,#11151d 34%,#050608 100%);color:var(--white);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.top{padding:8px 12px 0}.nav{max-width:900px;margin:0 auto 28px;background:#030711;border-radius:12px;min-height:94px;display:grid;grid-template-columns:70px 1fr 55px;align-items:center;padding:10px 18px;box-shadow:0 8px 25px #0005}
+.menu{font-size:34px;line-height:1;color:#ddd}.brand{text-align:center;font-family:Georgia,serif;font-weight:bold;font-size:clamp(25px,5vw,42px);letter-spacing:-1px;border-top:5px double #fff;border-bottom:5px double #fff;border-radius:14px;padding:3px 0 6px;justify-self:center}.user{text-align:right;color:#ddd;font-size:18px}
+main{width:min(900px,calc(100% - 28px));margin:0 auto 40px}.card{border:1.5px solid var(--line);border-radius:17px;overflow:hidden;margin:0 0 42px;background:linear-gradient(160deg,#1d2532,#080a0e 85%);box-shadow:0 12px 28px #0002}
+.cardhead{background:linear-gradient(100deg,#030303,#737985 52%,#030303);padding:23px 28px;display:flex;align-items:center;justify-content:space-between;gap:14px;border-bottom:1px solid var(--line);font-size:clamp(20px,4vw,30px);font-weight:700}
+.pill{background:#fff;color:#07090e;border-radius:30px;padding:10px 22px;font-size:20px;white-space:nowrap}
+.summary{padding:25px 28px 28px}.row{display:grid;grid-template-columns:minmax(120px,1fr) minmax(0,2fr);gap:14px;align-items:center;padding:22px 0;border-bottom:1px solid #e2e2e2;font-size:clamp(17px,3.5vw,26px)}.row:last-child{border:0}.label{color:#c2c6ce}.value{text-align:right;overflow-wrap:anywhere}.total .value{color:var(--blue);font-weight:800;font-size:clamp(22px,4.5vw,34px)}
+.detailhead{align-items:center}.search{width:min(60%,390px);min-width:125px;border:0;border-radius:12px;padding:10px 13px;font:inherit;font-size:18px;color:#111;background:#fff}
+.receipt{border-bottom:1px solid var(--line)}.receipt summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:12px;align-items:center;padding:23px 28px;font-size:clamp(18px,3.5vw,26px)}.receipt summary::-webkit-details-marker{display:none}.chevron{font-size:24px}.receiptbody{padding:0 28px 24px;color:#d1d5db;font-size:14px;overflow:auto}.receiptbody table{border-collapse:collapse;width:100%;font-size:13px}.receiptbody td,.receiptbody th{border-bottom:1px solid #454b55;padding:9px;text-align:left;white-space:nowrap}
+.upload{background:#fff;color:#111827;border-radius:12px;padding:18px;margin-bottom:25px;font-family:Arial,sans-serif}.upload h2{margin:0 0 8px;font-size:18px}.upload p{color:#667085;font-size:13px;line-height:1.45}.upload input{max-width:100%;margin:8px 0}.btn{border:0;border-radius:9px;padding:11px 16px;background:#2563eb;color:#fff;font-weight:700;cursor:pointer}.btn.secondary{background:#eef2f7;color:#344054}.actions{display:flex;gap:9px;flex-wrap:wrap}.status{font-size:13px;line-height:1.5;margin-top:10px;color:#a7f3d0;overflow-wrap:anywhere}.status.bad{color:#fcd34d}
+.empty{padding:22px 28px;color:#b5bac4;font-size:14px;line-height:1.5}.small{font-size:12px;color:#a8adb7}
+@media(max-width:520px){.nav{grid-template-columns:42px 1fr 35px;min-height:84px;padding:10px 14px;margin-bottom:25px}.menu{font-size:30px}.user{font-size:16px}.brand{font-size:clamp(24px,7vw,33px)}main{width:calc(100% - 28px)}.cardhead{padding:20px 18px}.summary{padding:18px 20px 20px}.row{grid-template-columns: minmax(90px,1fr) minmax(0,1.6fr);gap:8px;padding:19px 0}.receipt summary{padding:21px 18px}.receiptbody{padding:0 18px 20px}.detailhead{flex-wrap:wrap}.search{width:100%;max-width:none}.pill{font-size:17px;padding:8px 17px}}
 </style>
 </head>
 <body>
-<header><div class="bar"><span class="logo">MM</span><span>Database Upload & Inspector</span></div></header>
+<div class="top"><header class="nav"><div class="menu" aria-label="Menu">☰</div><div class="brand">Klerek App</div><div class="user">MM</div></header></div>
 <main>
-<div class="eyebrow">Local file tool</div><h1>Upload & Periksa Database</h1>
-<p class="muted">Pilih file ZIP backup atau file .db. Tool ini mencoba membaca arsip dan database SQLite yang standar langsung di browser.</p>
-<section class="card">
-<label class="drop" for="file"><span style="font-size:28px">⇧</span><b>Pilih file backup (.zip / .db)</b><small>File diproses di browser perangkat ini; tidak dikirim ke server oleh halaman ini.</small>
-<input id="file" type="file" accept=".zip,.db,.sqlite,.sqlite3,.dat,*/*"></label>
-<div id="picked" class="status">Belum ada file yang dipilih.</div>
-<div class="actions"><button id="process" class="primary" disabled>Process</button><button id="reset" class="secondary">Reset</button></div>
-<div id="status" class="status hidden" aria-live="polite"></div>
+<section class="upload">
+<h2>Upload Database P263</h2><p>Pilih file backup ZIP atau DB. Data akan diproses di browser ini; gunakan hanya backup yang memang boleh kamu akses.</p>
+<input id="file" type="file" accept=".zip,.db,.sqlite,.sqlite3,.dat,*/*">
+<div class="actions"><button class="btn" id="process" disabled>Process</button><button class="btn secondary" id="reset">Reset</button></div>
+<div id="status" class="status">Belum ada file dipilih.</div>
 </section>
-<section id="contents" class="card hidden"><h2 style="font-size:18px;margin-top:0">Isi arsip</h2><p class="muted small">Pilih file database yang ditemukan untuk mencoba membacanya.</p><div id="files"></div></section>
-<section id="data" class="card hidden"><h2 style="font-size:18px;margin-top:0">Data database</h2><div id="dbnote" class="status"></div><div id="tables" class="tabs"></div><div id="tabledata"></div></section>
-<p class="muted small">Catatan: jika file P263 memakai format proprietary, terenkripsi, atau bukan SQLite standar, browser tidak dapat menebak struktur aslinya. Gunakan hanya backup yang memang boleh kamu akses; jangan unggah data pelanggan atau informasi rahasia ke layanan publik.</p>
-</main><footer>Database Inspector · Browser-based demo</footer>
+<section class="card">
+<div class="cardhead"><span>Rekap Klerek</span><span class="pill">LZ01</span></div>
+<div class="summary">
+<div class="row"><div class="label">Toko</div><div class="value" id="store">BK 0 CIPTA MUDA/F [BK0C] P263</div></div>
+<div class="row"><div class="label">User ID</div><div class="value" id="userid">—</div></div>
+<div class="row"><div class="label">Tanggal Transaksi</div><div class="value" id="date">—</div></div>
+<div class="row total"><div class="label">Total Transaksi Tunai + Topup Flazz</div><div class="value" id="total">Rp0</div></div>
+</div></section>
+<section class="card">
+<div class="cardhead detailhead"><span>Detail<br>Per Struk</span><input class="search" id="search" placeholder="Search" aria-label="Cari nomor struk"></div>
+<div id="receipts"><div class="empty">Unggah file backup yang kompatibel untuk melihat detail transaksi per struk. Jika database tidak berisi data transaksi yang bisa dikenali, bagian ini akan tetap kosong.</div></div>
+</section>
+<section class="card">
+<div class="cardhead"><span>Daftar Tabel Database</span></div><div id="tables" class="empty">Tabel database akan muncul setelah file berhasil dibaca.</div>
+</section>
+<p class="small">Catatan: desain ini meniru gaya visual pada screenshot referensi. Data rekap hanya akan diisi jika struktur dan kolom pada database dapat dikenali; nilai contoh tidak dibuat-buat.</p>
+</main>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.js"></script>
 <script>
-const $=id=>document.getElementById(id);let selectedDb=null,db=null,SQL=null,zipFiles=[];
-const fmt=n=>n<1024?n+' B':n<1048576?(n/1024).toFixed(1)+' KB':(n/1048576).toFixed(2)+' MB';
-function message(s,kind=''){ $('status').className='status '+kind; $('status').textContent=s; $('status').classList.remove('hidden');}
-$('file').addEventListener('change',()=>{const f=$('file').files[0];$('picked').textContent=f?`${f.name} · ${fmt(f.size)}`:'Belum ada file yang dipilih.';$('process').disabled=!f;$('status').classList.add('hidden');$('contents').classList.add('hidden');$('data').classList.add('hidden');});
-$('reset').onclick=()=>{ $('file').value='';$('picked').textContent='Belum ada file yang dipilih.';$('process').disabled=true;$('status').classList.add('hidden');$('contents').classList.add('hidden');$('data').classList.add('hidden');$('files').innerHTML='';$('tables').innerHTML='';$('tabledata').innerHTML='';zipFiles=[];selectedDb=null;if(db){db.close();db=null;}};
-function isDbName(n){return /\.(db|sqlite|sqlite3|dat)$/i.test(n)}
-$('process').onclick=async()=>{
- const f=$('file').files[0];if(!f)return;
- $('process').disabled=true;$('contents').classList.add('hidden');$('data').classList.add('hidden');
- try{
-  const bytes=new Uint8Array(await f.arrayBuffer());zipFiles=[];selectedDb=null;
-  const isZip=f.name.toLowerCase().endsWith('.zip')||bytes[0]===0x50&&bytes[1]===0x4b;
-  if(isZip){
-   if(!window.JSZip)throw Error('Pustaka ZIP belum termuat. Pastikan internet aktif lalu muat ulang halaman.');
-   const z=await JSZip.loadAsync(bytes);const entries=Object.values(z.files).filter(x=>!x.dir);
-   if(!entries.length){message('ZIP tidak berisi file yang dapat dibaca.','warn');return;}
-   for(const e of entries){zipFiles.push({name:e.name,file:e});}
-   $('files').innerHTML='';
-   const list=document.createElement('div');list.className='tablewrap';const t=document.createElement('table');
-   t.innerHTML='<thead><tr><th>Nama file di ZIP</th><th>Jenis</th><th>Aksi</th></tr></thead>';
-   const tb=document.createElement('tbody');
-   for(const e of zipFiles){const tr=document.createElement('tr');const td1=document.createElement('td');td1.textContent=e.name;const td2=document.createElement('td');td2.textContent=isDbName(e.name)?'Mungkin database':'File';const td3=document.createElement('td');if(isDbName(e.name)){const b=document.createElement('button');b.className='primary';b.textContent='Baca DB';b.onclick=async()=>{try{const bts=await e.file.async('uint8array');await openDatabase(bts,e.name)}catch(err){message('Gagal membaca file: '+err.message,'err')}};td3.appendChild(b)}else td3.textContent='—';tr.append(td1,td2,td3);tb.appendChild(tr)}
-   t.appendChild(tb);list.appendChild(t);$('files').appendChild(list);$('contents').classList.remove('hidden');
-   const dbs=zipFiles.filter(x=>isDbName(x.name));
-   message(`ZIP berhasil dibuka. Ditemukan ${entries.length} file; ${dbs.length} file memiliki ekstensi yang mungkin berupa database.`,'ok');
-   if(!dbs.length)message('ZIP berhasil dibuka, tetapi tidak ditemukan file .db/.sqlite/.sqlite3/.dat. Periksa daftar file di bawah.','warn');
-  }else{await openDatabase(bytes,f.name);}
- }catch(err){message('Tidak berhasil memproses file: '+err.message,'err');}
- finally{$('process').disabled=!$('file').files[0];}
-};
-async function openDatabase(bytes,name){
- try{
-  if(!window.initSqlJs)throw Error('Pustaka SQLite belum termuat. Aktifkan internet dan muat ulang halaman.');
-  if(!SQL)SQL=await initSqlJs({locateFile:file=>'https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/'+file});
-  if(db)db.close();db=new SQL.Database(bytes);selectedDb=name;
-  const rows=db.exec("SELECT name, type FROM sqlite_master WHERE type IN ('table','view') ORDER BY type, name");
-  if(!rows.length||!rows[0].values.length)throw Error('File terbuka, tetapi tidak ada tabel SQLite yang dikenali. Mungkin bukan SQLite standar, terenkripsi, atau format khusus.');
-  const items=rows[0].values.map(r=>({name:r[0],type:r[1]}));$('tables').innerHTML='';
-  $('dbnote').className='status ok';$('dbnote').textContent=`Berhasil membaca: ${name}. Ditemukan ${items.length} tabel/view.`;
-  items.forEach((it,i)=>{const b=document.createElement('button');b.className='tab'+(i===0?' active':'');b.textContent=it.name;b.onclick=()=>showTable(it.name,b);$('tables').appendChild(b);});
-  $('data').classList.remove('hidden');showTable(items[0].name,$('tables').firstChild);
- }catch(err){$('data').classList.add('hidden');message('Tidak dapat membaca sebagai SQLite standar: '+err.message,'warn');}
+const $=id=>document.getElementById(id);let SQL=null,db=null,zipFiles=[];
+const isDb=n=>/\.(db|sqlite|sqlite3|dat)$/i.test(n);
+$('file').addEventListener('change',()=>{$('process').disabled=!$('file').files[0];$('status').textContent=$('file').files[0]?`Dipilih: ${$('file').files[0].name}`:'Belum ada file dipilih.';$('status').className='status'});
+$('reset').onclick=()=>{ $('file').value='';$('process').disabled=true;$('status').textContent='Belum ada file dipilih.';$('receipts').innerHTML='<div class="empty">Unggah file backup yang kompatibel untuk melihat detail transaksi per struk.</div>';$('tables').textContent='Tabel database akan muncul setelah file berhasil dibaca.';$('userid').textContent='—';$('date').textContent='—';$('total').textContent='Rp0';if(db){db.close();db=null;}zipFiles=[];};
+$('process').onclick=async()=>{const f=$('file').files[0];if(!f)return;$('process').disabled=true;try{const bytes=new Uint8Array(await f.arrayBuffer());if(f.name.toLowerCase().endsWith('.zip')||(bytes[0]===80&&bytes[1]===75)){if(!window.JSZip)throw Error('Pustaka ZIP belum termuat. Pastikan internet aktif.');const z=await JSZip.loadAsync(bytes);zipFiles=Object.values(z.files).filter(e=>!e.dir);const candidates=zipFiles.filter(e=>isDb(e.name));$('status').textContent=`ZIP terbuka: ${zipFiles.length} file ditemukan; ${candidates.length} file ber-ekstensi database.`;if(!candidates.length){$('status').className='status bad';return;}const pick=candidates.find(e=>/p263|android/i.test(e.name))||candidates[0];const b=await pick.async('uint8array');await openDb(b,pick.name);}else await openDb(bytes,f.name);}catch(e){$('status').className='status bad';$('status').textContent='Gagal memproses: '+e.message;}finally{$('process').disabled=!$('file').files[0];}};
+async function openDb(bytes,name){
+ if(!window.initSqlJs)throw Error('Pustaka SQLite belum termuat. Periksa koneksi internet.');
+ if(!SQL)SQL=await initSqlJs({locateFile:f=>'https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/'+f});
+ if(db)db.close();db=new SQL.Database(bytes);
+ const tablesResult=db.exec("SELECT name,type FROM sqlite_master WHERE type IN ('table','view') ORDER BY name");
+ if(!tablesResult.length||!tablesResult[0].values.length)throw Error('Tidak ada tabel SQLite yang dikenali; format mungkin khusus atau terenkripsi.');
+ const tables=tablesResult[0].values.map(x=>({name:x[0],type:x[1]}));
+ $('status').textContent=`Berhasil membaca ${name}: ${tables.length} tabel/view ditemukan.`;$('status').className='status';
+ $('tables').innerHTML='';
+ tables.forEach(t=>{const b=document.createElement('button');b.className='btn secondary';b.style.margin='4px';b.textContent=t.name;b.onclick=()=>showGenericTable(t.name);$('tables').appendChild(b)});
+ const tsale=tableExists('tx_tsale'), receipts=tableExists('log_receipt_prn');
+ if(tsale){
+   const rows=db.exec('SELECT * FROM tx_tsale ORDER BY date_tx, faktur');
+   const cols=rows.length?rows[0].columns:[];const vals=rows.length?rows[0].values:[];
+   const idx=n=>cols.findIndex(c=>c.toLowerCase()===n.toLowerCase());
+   const get=(r,n)=>{const i=idx(n);return i<0?null:r[i]};
+   const total=vals.reduce((s,r)=>s+(Number(get(r,'total_faktur'))||0),0);
+   const dates=[...new Set(vals.map(r=>get(r,'date_tx')).filter(Boolean))];
+   const users=[...new Set(vals.map(r=>get(r,'user_id')).filter(Boolean))];
+   $('userid').textContent=users.join(', ')||'—';
+   $('date').textContent=dates.join(', ')||'—';
+   $('total').textContent='Rp'+Math.round(total).toLocaleString('id-ID');
+   // Derive store name from receipt header where available, otherwise show database store code.
+   if(receipts){
+     const head=db.exec('SELECT header FROM log_receipt_prn WHERE header IS NOT NULL LIMIT 1');
+     if(head.length&&head[0].values[0][0]){
+       const h=String(head[0].values[0][0]).split('|').filter(Boolean);
+       if(h.length>1)$('store').textContent=h[1].trim();
+     } else {
+       const s=db.exec('SELECT store_id FROM tx_tsale LIMIT 1');
+       if(s.length)$('store').textContent=String(s[0].values[0][0]||'P263');
+     }
+   }
+   renderReceiptsFromDb();
+ }else{
+   $('receipts').innerHTML='<div class="empty">Database berhasil dibuka, tetapi tabel tx_tsale tidak ditemukan. Detail struk belum dapat dirangkai otomatis.</div>';
+ }
 }
-function showTable(name,button){
- document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));if(button)button.classList.add('active');
- try{
-  const safe=name.replace(/"/g,'""');const count=db.exec(`SELECT COUNT(*) FROM "${safe}"`)[0].values[0][0];
-  const res=db.exec(`SELECT * FROM "${safe}" LIMIT 200`);const host=$('tabledata');host.innerHTML='';
-  const p=document.createElement('p');p.className='muted small';p.textContent=`Tabel: ${name} · Total baris: ${count} · Pratinjau maksimal 200 baris`;host.appendChild(p);
-  if(!res.length){host.appendChild(document.createTextNode('Tabel tidak memiliki kolom untuk ditampilkan.'));return}
-  const wrap=document.createElement('div');wrap.className='tablewrap';const table=document.createElement('table'),thead=document.createElement('thead'),hr=document.createElement('tr');
-  res[0].columns.forEach(c=>{const th=document.createElement('th');th.textContent=c;hr.appendChild(th)});thead.appendChild(hr);table.appendChild(thead);
-  const tbody=document.createElement('tbody');res[0].values.forEach(row=>{const tr=document.createElement('tr');row.forEach(v=>{const td=document.createElement('td');td.textContent=v===null?'NULL':String(v);td.title=td.textContent;tr.appendChild(td)});tbody.appendChild(tr)});table.appendChild(tbody);wrap.appendChild(table);host.appendChild(wrap);
-  const exp=document.createElement('button');exp.className='secondary';exp.style.marginTop='12px';exp.textContent='Ekspor pratinjau CSV';exp.onclick=()=>{const cols=res[0].columns;const csv=[cols,...res[0].values].map(row=>row.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.download=name.replace(/[^a-z0-9_-]/gi,'_')+'.csv';a.click();URL.revokeObjectURL(a.href)};host.appendChild(exp);
- }catch(err){$('tabledata').textContent='Gagal menampilkan tabel: '+err.message}
+function tableExists(name){try{return db.exec("SELECT 1 FROM sqlite_master WHERE type IN ('table','view') AND name='"+name.replace(/'/g,"''")+"'").length>0}catch(e){return false}}
+function renderReceiptsFromDb(){
+ const host=$('receipts');host.innerHTML='';
+ const sale=db.exec('SELECT * FROM tx_tsale ORDER BY date_tx, faktur');
+ if(!sale.length||!sale[0].values.length){host.innerHTML='<div class="empty">Tabel tx_tsale tidak memiliki data transaksi.</div>';return}
+ const cols=sale[0].columns, rows=sale[0].values;
+ const ix=n=>cols.findIndex(c=>c.toLowerCase()===n.toLowerCase());
+ const val=(r,n)=>{const i=ix(n);return i<0?null:r[i]};
+ let receiptMap=new Map();
+ if(tableExists('log_receipt_prn')){
+   const rr=db.exec('SELECT * FROM log_receipt_prn');
+   if(rr.length){
+     const rc=rr[0].columns, ri=n=>rc.findIndex(c=>c.toLowerCase()===n.toLowerCase());
+     rr[0].values.forEach(r=>{
+       const bill=ri('bill_no')>=0?String(r[ri('bill_no')]??''):'';
+       const body=['header','body1','body2','body3','addtl1','addtl2','addtl3','footer'].map(n=>ri(n)>=0?r[ri(n)]||'':'').join('\n').trim();
+       if(bill)receiptMap.set(bill,body);
+     });
+   }
+ }
+ rows.forEach((r,i)=>{
+   const faktur=String(val(r,'faktur')??'');const bill=faktur.split('-').pop()||String(i+1);
+   const receiptText=receiptMap.get(String(Number(bill)))||receiptMap.get(bill)||'';
+   const d=document.createElement('details');d.className='receipt';
+   const s=document.createElement('summary');const label=document.createElement('span');label.textContent=faktur||`Struk ${i+1}`;const chev=document.createElement('span');chev.className='chevron';chev.textContent='⌄';s.append(label,chev);
+   const body=document.createElement('div');body.className='receiptbody';
+   const fields=[
+    ['Tanggal',val(r,'date_tx')],['User ID',val(r,'user_id')],['Nomor struk',faktur],
+    ['Total faktur',money(val(r,'total_faktur'))],['Tunai',money(val(r,'cash'))],
+    ['Topup Flazz',money(val(r,'nom_topup'))],['Pembayaran wallet',money(val(r,'wallet'))]
+   ];
+   const t=document.createElement('table');
+   fields.forEach(([k,v])=>{if(v!==null&&v!==''){const tr=document.createElement('tr'),th=document.createElement('th'),td=document.createElement('td');th.textContent=k;td.textContent=v;tr.append(th,td);t.appendChild(tr)}});
+   body.appendChild(t);
+   if(receiptText){const pre=document.createElement('pre');pre.style.whiteSpace='pre-wrap';pre.style.fontFamily='inherit';pre.style.fontSize='12px';pre.style.lineHeight='1.5';pre.textContent=receiptText;body.appendChild(pre)}
+   else {const p=document.createElement('p');p.textContent='Rincian struk tercetak tidak ditemukan di log_receipt_prn untuk nomor ini.';body.appendChild(p)}
+   d.append(s,body);host.appendChild(d);
+ });
 }
+function money(v){if(v===null||v===undefined||v==='')return '';const n=Number(v);return Number.isFinite(n)?'Rp'+Math.round(n).toLocaleString('id-ID'):String(v)}
+function showGenericTable(name){
+ const safe=name.replace(/"/g,'""');let r;try{r=db.exec(`SELECT * FROM "${safe}" LIMIT 200`)}catch(e){return}
+ const host=$('receipts');host.innerHTML='';
+ if(!r.length){host.innerHTML='<div class="empty">Tabel '+name+' tidak memiliki kolom yang dapat ditampilkan.</div>';return}
+ const cols=r[0].columns,values=r[0].values;
+ values.forEach((row,i)=>{const d=document.createElement('details');d.className='receipt';const s=document.createElement('summary');const sp=document.createElement('span');sp.textContent=String(row[0]??`${name} #${i+1}`);const ch=document.createElement('span');ch.className='chevron';ch.textContent='⌄';s.append(sp,ch);const body=document.createElement('div');body.className='receiptbody';const table=document.createElement('table');row.forEach((v,j)=>{const tr=document.createElement('tr'),th=document.createElement('th'),td=document.createElement('td');th.textContent=cols[j];td.textContent=v===null?'NULL':String(v);tr.append(th,td);table.appendChild(tr)});body.appendChild(table);d.append(s,body);host.appendChild(d)});
+ if(!values.length)host.innerHTML='<div class="empty">Tabel '+name+' tidak memiliki baris data.</div>';
+}
+$('search').addEventListener('input',()=>{const q=$('search').value.toLowerCase();document.querySelectorAll('.receipt').forEach(d=>d.style.display=d.querySelector('summary').textContent.toLowerCase().includes(q)?'':'none')});
 </script>
 </body></html>
