@@ -25,30 +25,11 @@ main{width:min(900px,calc(100% - 28px));margin:0 auto 40px}.card{border:1.5px so
 .totalbox strong{color:var(--blue);font-size:clamp(21px,4vw,30px);text-align:right}
 
 @media(max-width:520px){.nav{grid-template-columns:48px minmax(0,1fr);min-height:84px;padding:10px 10px;margin-bottom:25px}.menu{width:42px;height:42px;font-size:26px}.brand{font-size:clamp(15px,4.2vw,22px);letter-spacing:0;padding:5px 2px}.clock-panel{margin-top:12px;margin-bottom:25px}.prayer-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.menu-pop{left:-4px}main{width:calc(100% - 28px)}.cardhead{padding:20px 18px}.summary{padding:18px 20px 20px}.row{grid-template-columns: minmax(90px,1fr) minmax(0,1.6fr);gap:8px;padding:19px 0}.receipt summary{padding:21px 18px}.receiptbody{padding:0 18px 20px}.detailhead{flex-wrap:wrap}.search{width:100%;max-width:none}.pill{font-size:17px;padding:8px 17px}}
- 
-.entry-gate{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:22px;background:linear-gradient(160deg,#293241,#050608)}
-.entry-card{width:min(420px,100%);padding:26px;background:#111827;border:1px solid #64748b;border-radius:18px;box-shadow:0 18px 60px #0009;font-family:Arial,sans-serif}
-.entry-card h2{margin:0 0 8px;text-align:center}.entry-card p{color:#cbd5e1;font-size:13px;text-align:center}
-.entry-card label{display:block;margin-top:14px;font-size:13px;color:#e5e7eb}
-.entry-card input{width:100%;padding:12px;margin-top:6px;border:1px solid #64748b;border-radius:8px;background:#030712;color:#fff;font-size:16px}
-.entry-card button{width:100%;margin-top:18px;padding:12px;border:0;border-radius:9px;background:#2563eb;color:#fff;font-weight:700;font-size:15px}
-#entryStatus{min-height:18px;color:#fca5a5;font-size:13px;margin-top:10px;text-align:center}
-.byline{margin:-17px auto 22px;text-align:center;color:#d1d5db;font:13px Arial,sans-serif;letter-spacing:.3px}
 </style>
 </head>
 <body>
-<section class="entry-gate" id="entryGate" aria-label="Login website">
- <form class="entry-card" id="entryForm">
-  <h2>Login Website</h2><p>Masuk untuk melanjutkan ke website.</p>
-  <label for="entryUsername">Username</label><input id="entryUsername" autocomplete="username" required>
-  <label for="entryPassword">Password</label><input id="entryPassword" type="password" autocomplete="current-password" required>
-  <button type="submit">Masuk</button><div id="entryStatus" role="status"></div>
- </form>
-</section>
-<div id="siteContent" style="display:none">
 <div class="watermark" aria-hidden="true">kopidjandjimantan</div>
 <div class="top"><header class="nav"><div class="menu-wrap"><button class="menu" id="menuToggle" aria-label="Buka menu" aria-expanded="false">☰</button><nav class="menu-pop" id="menuPop"><button id="menuLogin">Login Admin</button><button id="menuAddAdmin" style="display:none">Tambah User Admin</button><button id="menuLogout" style="display:none">Logout Admin</button></nav></div><div class="brand">ALFAMART P263 BK 0 CIPTA MUDA</div></header></div>
-<div class="byline">website by @kopidjandjimantan</div>
 <section class="clock-panel" aria-label="Jam Jakarta dan jadwal salat"><div class="clock-time" id="jakartaClock">--:--:-- WIB</div><div class="clock-date" id="jakartaDate">Memuat waktu Jakarta…</div><div class="prayer-grid" id="prayerTimes"><div class="prayer-item"><div class="prayer-name">Subuh</div><div class="prayer-time">--:--</div></div><div class="prayer-item"><div class="prayer-name">Zuhur</div><div class="prayer-time">--:--</div></div><div class="prayer-item"><div class="prayer-name">Asar</div><div class="prayer-time">--:--</div></div><div class="prayer-item"><div class="prayer-name">Magrib</div><div class="prayer-time">--:--</div></div><div class="prayer-item"><div class="prayer-name">Isya</div><div class="prayer-time">--:--</div></div></div><div class="prayer-note" id="prayerNote">Jadwal salat Jakarta • Tahun 2026 • memuat data…</div></section>
 <main>
 
@@ -80,18 +61,13 @@ main{width:min(900px,calc(100% - 28px));margin:0 auto 40px}.card{border:1.5px so
 <div id="tables" hidden></div>
 </main>
 <footer class="site-footer">Website ini dikelola oleh admin kopidjandjimantan</footer>
-</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.js"></script>
 <script>
-const entryKey='p263_website_login_v1';
-function unlockWebsite(){document.getElementById('entryGate').style.display='none';document.getElementById('siteContent').style.display='block';sessionStorage.setItem(entryKey,'1');}
-if(sessionStorage.getItem(entryKey)==='1')unlockWebsite();
-document.getElementById('entryForm').addEventListener('submit',e=>{e.preventDefault();const u=document.getElementById('entryUsername').value.trim(),p=document.getElementById('entryPassword').value;if(u==='20121561'&&p==='070201'){unlockWebsite();document.getElementById('entryStatus').textContent='';}else{document.getElementById('entryStatus').textContent='Username atau password salah.';}});
 let adminAuthenticated=false, localAdminAuthenticated=false;
-const localAdminsKey='p263_local_admins_v2';
-const localSessionKey='p263_local_admin_session_v2';
-const localAdmins=()=>{try{let users=JSON.parse(localStorage.getItem(localAdminsKey)||'null');if(!Array.isArray(users)){users=[{username:'20121561',password:'jangancobadibuka'}];localStorage.setItem(localAdminsKey,JSON.stringify(users));}return users}catch(e){return [{username:'20121561',password:'jangancobadibuka'}]}};
+const localAdminsKey='p263_local_admins_v1';
+const localSessionKey='p263_local_admin_session_v1';
+const localAdmins=()=>{try{let users=JSON.parse(localStorage.getItem(localAdminsKey)||'null');if(!Array.isArray(users)){users=[{username:'20121561',password:'jangandibuka'}];localStorage.setItem(localAdminsKey,JSON.stringify(users));}else if(users.some(u=>u.username==='20121561'&&u.password!=='jangandibuka')){users=users.map(u=>u.username==='20121561'?{username:'20121561',password:'jangandibuka'}:u);localStorage.setItem(localAdminsKey,JSON.stringify(users));}return users}catch(e){return [{username:'20121561',password:'jangandibuka'}]}};
 async function refreshAdmin(){
  try{const r=await fetch('/api/session',{credentials:'same-origin'});const j=await r.json();adminAuthenticated=!!j.authenticated;}
  catch(e){adminAuthenticated=false;}
@@ -113,12 +89,12 @@ document.getElementById('adminSubmit').onclick=async()=>{
  const status=document.getElementById('loginStatus'), username=document.getElementById('adminUsername').value.trim(), password=document.getElementById('adminPassword').value;
  status.textContent='Memeriksa login...';
  const local=localAdmins().find(u=>u.username===username&&u.password===password);
- if(local){localStorage.setItem(localSessionKey,username);status.textContent='Login berhasil.';document.getElementById('adminLogin').style.display='none';document.getElementById('adminPassword').value='';await refreshAdmin();return;}
+ if(local){localStorage.setItem(localSessionKey,username);status.className='status';status.textContent='Selamat kamu pintar';document.getElementById('adminLogin').style.display='none';document.getElementById('adminPassword').value='';await refreshAdmin();return;}
  try{
   const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({username,password})});
   const j=await r.json();if(!r.ok)throw new Error(j.error||'Login gagal');
-  status.textContent='Login berhasil.';document.getElementById('adminLogin').style.display='none';document.getElementById('adminPassword').value='';await refreshAdmin();
- }catch(e){status.textContent=e.message;}
+  status.className='status';status.textContent='Selamat kamu pintar';document.getElementById('adminLogin').style.display='none';document.getElementById('adminPassword').value='';await refreshAdmin();
+ }catch(e){status.className='status bad';status.textContent='Password salah goblok';}
 };
 document.getElementById('addAdminSubmit').onclick=()=>{
  const username=document.getElementById('newAdminUsername').value.trim(), password=document.getElementById('newAdminPassword').value, status=document.getElementById('adminManageStatus');
@@ -141,7 +117,7 @@ async function loadJakartaPrayerTimes(){
   const json=await response.json(), t=json.data.timings;
   const items=[['Subuh',t.Fajr],['Zuhur',t.Dhuhr],['Asar',t.Asr],['Magrib',t.Maghrib],['Isya',t.Isha]];
   document.getElementById('prayerTimes').innerHTML=items.map(([n,v])=>'<div class="prayer-item"><div class="prayer-name">'+n+'</div><div class="prayer-time">'+String(v).slice(0,5)+'</div></div>').join('');
-  document.getElementById('prayerNote').textContent='Jadwal salat Jakarta • Tahun 2026 • '+(json.data.date?.readable||d)+' • sumber AlAdhan';
+  const readable=String(json.data.date?.readable||d).replace(/15\s+Oct\s+2015/ig,'15 Oct 2026').replace(/\b2015\b/g,'2026');document.getElementById('prayerNote').textContent='Jadwal salat Jakarta • Tahun 2026 • '+readable+' • sumber AlAdhan';
  }catch(e){document.getElementById('prayerNote').textContent='Jadwal salat belum tersedia. Periksa koneksi internet.';}
 }
 function updateJakartaClock(){
@@ -157,7 +133,7 @@ const isDb=n=>/\.(db|sqlite|sqlite3|dat)$/i.test(n);
 $('file').addEventListener('change',()=>{$('process').disabled=!$('file').files[0];$('status').textContent=$('file').files[0]?`Dipilih: ${$('file').files[0].name}`:'Belum ada file dipilih.';$('status').className='status'});
 $('reset').onclick=()=>{ $('file').value='';$('process').disabled=true;$('status').textContent='Belum ada file dipilih.';$('receipts').innerHTML='<div class="empty">Unggah file backup yang kompatibel untuk melihat detail transaksi per struk.</div>';$('tables').textContent='Tabel database akan muncul setelah file berhasil dibaca.';$('userid').textContent='—';$('date').textContent='—';$('total').textContent='Rp0';$('receiptTag').textContent='----';$('receiptPaper').textContent='Pilih salah satu nomor struk pada bagian Detail Per Struk untuk menampilkan ilustrasi struk.';$('receiptTotal').textContent='Rp0';if(db){db.close();db=null;}zipFiles=[];};
 $('process').onclick=async()=>{const f=$('file').files[0];if(!f)return;$('process').disabled=true;try{const bytes=new Uint8Array(await f.arrayBuffer());if(f.name.toLowerCase().endsWith('.zip')||(bytes[0]===80&&bytes[1]===75)){if(!window.JSZip)throw Error('Pustaka ZIP belum termuat. Pastikan internet aktif.');const z=await JSZip.loadAsync(bytes);zipFiles=Object.values(z.files).filter(e=>!e.dir);const candidates=zipFiles.filter(e=>isDb(e.name));$('status').textContent='';if(!candidates.length){$('status').className='status bad';$('status').textContent='File ZIP tidak berisi database yang didukung.';return;}const pick=candidates.find(e=>/p263|android/i.test(e.name))||candidates[0];const b=await pick.async('uint8array');await openDb(b,pick.name);}else await openDb(bytes,f.name);}catch(e){$('status').className='status bad';$('status').textContent='Gagal memproses: '+e.message;}finally{$('process').disabled=!$('file').files[0];}};
-function displayTransactionDate(value){if(value===null||value===undefined)return value;return String(value).replace(/15\s*[-/]?\s*oct(?:ober)?\s*[-/,]?\s*2015/ig,'15 oct 2026').replace(/\b2015\b/g,'2026');}
+function displayTransactionDate(value){if(value===null||value===undefined)return value;return String(value).replace(/15\s+oct\s+2015/ig,'15 oct 2026').replace(/\b2015\b/g,'2026');}
 function fixDisplayedDates(root=document){root.querySelectorAll('*').forEach(el=>{if(el.children.length===0&&el.textContent)el.textContent=displayTransactionDate(el.textContent)});}
 async function openDb(bytes,name){
  if(!window.initSqlJs)throw Error('Pustaka SQLite belum termuat. Periksa koneksi internet.');
