@@ -26,13 +26,19 @@ main{width:min(900px,calc(100% - 28px));margin:0 auto 40px}.card{border:1.5px so
 .totalbox strong{color:var(--blue);font-size:clamp(21px,4vw,30px);text-align:right}
 
 @media(max-width:520px){.nav{grid-template-columns:48px minmax(0,1fr);min-height:84px;padding:10px 10px;margin-bottom:25px}.menu{width:42px;height:42px;font-size:26px}.brand{font-size:clamp(15px,4.2vw,22px);letter-spacing:0;padding:5px 2px}.clock-panel{margin-top:12px;margin-bottom:25px}.prayer-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.menu-pop{left:-4px}main{width:calc(100% - 28px)}.cardhead{padding:20px 18px}.summary{padding:18px 20px 20px}.row{grid-template-columns: minmax(90px,1fr) minmax(0,1.6fr);gap:8px;padding:19px 0}.receipt summary{padding:21px 18px}.receiptbody{padding:0 18px 20px}.detailhead{flex-wrap:wrap}.search{width:100%;max-width:none}.pill{font-size:17px;padding:8px 17px}}
+
+/* Revisi: login admin dihilangkan; login website tetap aktif */
+#adminLogin,#adminManagement,.menu-wrap{display:none!important}
+.brand{display:flex;flex-direction:column;align-items:center;gap:5px;text-align:center}
+.site-credit{display:block;font:12px Arial,sans-serif;color:#cbd5e1;letter-spacing:.2px}
+.initial-login h1{font-size:22px;line-height:1.3}
 </style>
 </head>
 <body>
 <div class="initial-gate" id="initialGate">
   <form class="initial-login" id="initialLoginForm">
-    <h1>Login Website</h1>
-    <p>Masukkan username dan password untuk membuka website.</p>
+    <h1>Selamat Datang Di Website Khusus Alfamart BK 0 Cipta Muda</h1>
+    <p>Masukkan username dan password untuk melanjutkan.</p>
     <label for="initialUsername">Username</label>
     <input id="initialUsername" autocomplete="username" required placeholder="Username">
     <label for="initialPassword">Password</label>
@@ -42,7 +48,7 @@ main{width:min(900px,calc(100% - 28px));margin:0 auto 40px}.card{border:1.5px so
   </form>
 </div>
 <div class="watermark" aria-hidden="true">kopidjandjimantan</div>
-<div class="top"><header class="nav"><div class="menu-wrap"><button class="menu" id="menuToggle" aria-label="Buka menu" aria-expanded="false">☰</button><nav class="menu-pop" id="menuPop"><button id="menuLogin">Login Admin</button><button id="menuAddAdmin" style="display:none">Kelola / Tambah Pengguna</button><button id="menuLogout" style="display:none">Logout Admin</button></nav></div><div class="brand">ALFAMART P263 BK 0 CIPTA MUDA</div></header></div>
+<div class="top"><header class="nav"><div class="menu-wrap"><button class="menu" id="menuToggle" aria-label="Buka menu" aria-expanded="false">☰</button><nav class="menu-pop" id="menuPop"><button id="menuLogin">Login Admin</button><button id="menuAddAdmin" style="display:none">Kelola / Tambah Pengguna</button><button id="menuLogout" style="display:none">Logout Admin</button></nav></div><div class="brand">ALFAMART BK 0 CIPTA MUDA<span class="site-credit">Website by @kopidjandjimantan</span></div></header></div>
 <section class="clock-panel" aria-label="Jam Jakarta dan jadwal salat"><div class="clock-time" id="jakartaClock">--:--:-- WIB</div><div class="clock-date" id="jakartaDate">Memuat waktu Jakarta…</div><div class="prayer-grid" id="prayerTimes"><div class="prayer-item"><div class="prayer-name">Subuh</div><div class="prayer-time">--:--</div></div><div class="prayer-item"><div class="prayer-name">Zuhur</div><div class="prayer-time">--:--</div></div><div class="prayer-item"><div class="prayer-name">Asar</div><div class="prayer-time">--:--</div></div><div class="prayer-item"><div class="prayer-name">Magrib</div><div class="prayer-time">--:--</div></div><div class="prayer-item"><div class="prayer-name">Isya</div><div class="prayer-time">--:--</div></div></div><div class="prayer-note" id="prayerNote">Jadwal salat Jakarta • Tahun 2026 • memuat data…</div></section>
 <main>
 
@@ -102,6 +108,7 @@ function unlockWebsite(){
   document.getElementById('initialGate').classList.add('hidden');
   document.body.style.overflow='';
   document.getElementById('initialPassword').value='';
+  refreshAdmin();
 }
 document.body.style.overflow='hidden';
 
@@ -121,15 +128,12 @@ document.getElementById('initialLoginForm').addEventListener('submit',(e)=>{
 });
 
 async function refreshAdmin(){
-  // Admin session is intentionally separate from the initial website login.
-  adminAuthenticated=!!localStorage.getItem(localSessionKey);
-  localAdminAuthenticated=adminAuthenticated;
-  const logged=siteUnlocked && adminAuthenticated;
-  document.getElementById('uploadPanel').style.display=logged?'block':'none';
-  document.getElementById('menuLogin').style.display=logged?'none':'block';
-  document.getElementById('menuLogout').style.display=logged?'block':'none';
-  document.getElementById('menuAddAdmin').style.display=logged?'block':'none';
-  document.getElementById('adminManagement').style.display=logged?'block':'none';
+  // Login website menjadi satu-satunya gerbang sebelum panel upload ditampilkan.
+  adminAuthenticated=false;
+  localAdminAuthenticated=false;
+  document.getElementById('uploadPanel').style.display=siteUnlocked?'block':'none';
+  document.getElementById('adminLogin').style.display='none';
+  document.getElementById('adminManagement').style.display='none';
   renderAdminList();
 }
 function renderAdminList(){
