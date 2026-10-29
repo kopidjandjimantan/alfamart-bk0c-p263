@@ -45,12 +45,15 @@ main{width:min(900px,calc(100% - 28px));margin:0 auto 40px}.card{border:1.5px so
 <div class="initial-gate" id="initialGate">
   <form class="initial-login" id="initialLoginForm">
     <h1>SELAMAT DATANG DI WEBSITE KHUSUS KARYAWAN ALFAMART P263/BK 0 CIPTA MUDA</h1>
-    <p>Masukkan username dan password untuk melanjutkan.</p>
+    <p>Masukkan username, password, dan kode OTP Google Authenticator.</p>
     <label for="initialUsername">Username</label>
     <input id="initialUsername" autocomplete="username" required placeholder="Username">
     <label for="initialPassword">Password</label>
     <input id="initialPassword" type="password" autocomplete="current-password" required placeholder="Password">
+    <label for="initialOtp">Kode OTP (6 digit)</label>
+    <input id="initialOtp" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required placeholder="123456">
     <button class="gate-btn" type="submit">Masuk</button>
+    <p style="margin-top:14px"><a href="/setup-otp.html" style="color:#93c5fd">Aktifkan Google Authenticator</a></p>
     <div class="initial-status" id="initialStatus"></div>
   </form>
 </div>
@@ -97,10 +100,8 @@ main{width:min(900px,calc(100% - 28px));margin:0 auto 40px}.card{border:1.5px so
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.js"></script>
 <div id="clock-script-compat" hidden><div id="menuToggle"></div><div id="menuPop"></div><div id="menuLogin"></div><div id="menuAddAdmin"></div><div id="menuLogout"></div></div>
 <script>
-const INITIAL_USERNAME='20121561';
-const INITIAL_PASSWORD='070201';
-const ADMIN_USERNAME='20121561';
-const ADMIN_PASSWORD='jangandibuka';
+const INITIAL_USERNAME='Admin';
+const ADMIN_USERNAME='Admin';
 let siteUnlocked=false, adminAuthenticated=false, localAdminAuthenticated=false;
 const localAdminsKey='p263_local_admins_v1';
 const localSessionKey='p263_local_admin_session_v1';
@@ -149,12 +150,8 @@ const localAdmins=()=>{
   try{
     let users=JSON.parse(localStorage.getItem(localAdminsKey)||'null');
     if(!Array.isArray(users)) users=[];
-    if(!users.some(u=>u.username===ADMIN_USERNAME)){
-      users.unshift({username:ADMIN_USERNAME,password:ADMIN_PASSWORD,role:'super_admin'});
-      localStorage.setItem(localAdminsKey,JSON.stringify(users));
-    }
     return users;
-  }catch(e){return [{username:ADMIN_USERNAME,password:ADMIN_PASSWORD,role:'super_admin'}]}
+  }catch(e){return []}
 };
 
 function unlockWebsite(){
@@ -162,27 +159,27 @@ function unlockWebsite(){
   document.getElementById('initialGate').classList.add('hidden');
   document.body.style.overflow='';
   document.getElementById('initialPassword').value='';
+  document.getElementById('initialOtp').value='';
   document.getElementById('sessionBar').style.display='flex';
   document.getElementById('signedInLabel').textContent='Login sebagai: '+INITIAL_USERNAME;
   refreshAdmin();
 }
 document.body.style.overflow='hidden';
 
-document.getElementById('initialLoginForm').addEventListener('submit',(e)=>{
+document.getElementById('initialLoginForm').addEventListener('submit',async(e)=>{
   e.preventDefault();
   const username=document.getElementById('initialUsername').value.trim();
   const password=document.getElementById('initialPassword').value;
+  const otp=document.getElementById('initialOtp').value.trim();
   const status=document.getElementById('initialStatus');
-  if(username===INITIAL_USERNAME && password===INITIAL_PASSWORD){
-    logLogin(username,true);
-    status.className='initial-status good';
-    status.textContent='Login berhasil. Selamat datang.';
+  status.className='initial-status'; status.textContent='Memeriksa login…';
+  try {
+    const response=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({username,password,otp})});
+    const data=await response.json();
+    if(!response.ok) throw new Error(data.error||'Login gagal.');
+    logLogin(username,true); status.className='initial-status good'; status.textContent='Login berhasil. Selamat datang.';
     setTimeout(unlockWebsite,180);
-  }else{
-    logLogin(username||'(kosong)',false);
-    status.className='initial-status bad';
-    status.textContent='Username atau password salah.';
-  }
+  } catch(err) { logLogin(username||'(kosong)',false); status.className='initial-status bad'; status.textContent=err.message||'Tidak dapat menghubungi server.'; }
 });
 
 async function refreshAdmin(){
@@ -282,7 +279,7 @@ document.getElementById('showHistoryBtn').onclick=()=>{document.getElementById('
 document.getElementById('hideHistoryBtn').onclick=()=>document.getElementById('loginHistoryPanel').style.display='none';
 document.getElementById('refreshHistoryBtn').onclick=renderLoginHistory;
 document.getElementById('exportHistoryBtn').onclick=downloadHistoryCsv;
-document.getElementById('siteLogoutBtn').onclick=()=>{logLogout();siteUnlocked=false;document.getElementById('sessionBar').style.display='none';document.getElementById('loginHistoryPanel').style.display='none';document.getElementById('uploadPanel').style.display='none';document.getElementById('initialGate').classList.remove('hidden');document.body.style.overflow='hidden';document.getElementById('initialStatus').className='initial-status';document.getElementById('initialStatus').textContent='Kamu telah logout.';};
+document.getElementById('siteLogoutBtn').onclick=async()=>{try{await fetch('/api/logout',{method:'POST',credentials:'same-origin'});}catch(_){}logLogout();siteUnlocked=false;document.getElementById('sessionBar').style.display='none';document.getElementById('loginHistoryPanel').style.display='none';document.getElementById('uploadPanel').style.display='none';document.getElementById('initialGate').classList.remove('hidden');document.body.style.overflow='hidden';document.getElementById('initialStatus').className='initial-status';document.getElementById('initialStatus').textContent='Kamu telah logout.';};
 window.addEventListener('beforeunload',()=>{ /* Logout otomatis browser tidak selalu dapat dideteksi; sesi tanpa logout akan ditandai saat login berikutnya. */ });
 async function loadJakartaPrayerTimes(){
  const now=new Date(), parts=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Jakarta',day:'2-digit',month:'2-digit',year:'numeric'}).formatToParts(now), d=parts.find(p=>p.type==='day').value+'-'+parts.find(p=>p.type==='month').value+'-'+parts.find(p=>p.type==='year').value;
