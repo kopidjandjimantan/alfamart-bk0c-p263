@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="id">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>ALFAMART P263 BK 0 CIPTA MUDA</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -51,6 +51,78 @@ main{width:min(900px,calc(100% - 28px));margin:0 auto 40px}.card{border:1.5px so
 .maintenance-lock h2{margin:0 0 10px;color:#fde68a;font-size:23px}
 .maintenance-lock p{color:#e5e7eb;line-height:1.6;font-size:14px}
 .maintenance-lock .maintenance-countdown{margin:18px 0}
+
+
+/* FINAL MOBILE LAYOUT: login dan maintenance mengikuti lebar layar HP */
+html,body{width:100%;max-width:100%;min-height:100%;overflow-x:hidden}
+.initial-gate{
+  width:100%;
+  min-height:100vh;
+  min-height:100dvh;
+  height:auto;
+  align-items:flex-start;
+  justify-content:center;
+  overflow-y:auto;
+  overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  padding: max(12px,env(safe-area-inset-top)) 12px max(16px,env(safe-area-inset-bottom));
+}
+.initial-login{
+  display:block;
+  flex:0 1 560px;
+  width:100%;
+  max-width:560px;
+  min-width:0;
+  margin:auto;
+  padding:clamp(16px,4vw,28px);
+  overflow:visible;
+}
+.initial-login h1{
+  font-size:clamp(19px,5vw,25px);
+  line-height:1.28;
+  overflow-wrap:anywhere;
+}
+.initial-login p{font-size:clamp(13px,3.6vw,15px);line-height:1.5}
+.initial-login label{font-size:14px}
+.initial-login input{
+  display:block;
+  width:100%;
+  min-width:0;
+  min-height:50px;
+  padding:13px 14px;
+  font-size:16px;
+}
+.initial-login .gate-btn{min-height:52px;font-size:16px}
+.maintenance-notice{
+  width:100%;
+  max-width:100%;
+  padding:clamp(12px,3.5vw,16px);
+  font-size:clamp(13px,3.6vw,15px);
+  line-height:1.5;
+  overflow-wrap:anywhere;
+}
+.maintenance-countdown{gap:6px;flex-wrap:nowrap;width:100%}
+.maintenance-countdown span{
+  flex:1 1 0;
+  min-width:0;
+  padding:8px 3px;
+  font-size:clamp(16px,4.5vw,21px);
+}
+.maintenance-countdown small{font-size:clamp(9px,2.7vw,11px)}
+.maintenance-lock{
+  flex:0 1 560px;
+  width:100%;
+  max-width:560px;
+  min-width:0;
+  margin:auto;
+  padding:clamp(18px,5vw,28px);
+}
+@media(max-width:520px){
+  .initial-gate{padding-left:12px;padding-right:12px}
+  .initial-login{border-radius:18px}
+  .initial-login h1{font-size:clamp(18px,5vw,22px)}
+  .maintenance-notice strong{font-size:14px}
+}
 
 </style>
 </head>
