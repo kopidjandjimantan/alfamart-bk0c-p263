@@ -39,11 +39,37 @@ main{width:min(900px,calc(100% - 28px));margin:0 auto 40px}.card{border:1.5px so
 .history-actions{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.history-actions button{border:1px solid #64748b;border-radius:8px;background:#1e293b;color:#fff;padding:9px 12px;cursor:pointer}
 .history-table-wrap{overflow-x:auto}.history-table{width:100%;border-collapse:collapse;font-size:12px;min-width:850px}.history-table th,.history-table td{padding:9px 8px;border-bottom:1px solid #334155;text-align:left;vertical-align:top}.history-table th{color:#f2d18b;background:#111827;position:sticky;top:0}.history-status{display:inline-block;border-radius:20px;padding:3px 7px;background:#164e3b;color:#bbf7d0;white-space:nowrap}.history-status.failed{background:#7f1d1d;color:#fecaca}.history-empty{padding:16px;text-align:center;color:#94a3b8}
 .session-bar{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:10px;width:100%;margin:8px auto 0;text-align:center}.session-bar #signedInLabel{display:block;width:100%;font-size:clamp(16px,4vw,22px);line-height:1.35;color:#e5e7eb}.session-actions{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;width:100%}.session-bar button{border:1px solid #64748b;border-radius:8px;background:#182233;color:#fff;padding:9px 14px;cursor:pointer;min-width:100px}.session-actions button:first-child{min-width:180px}
+
+/* Pengumuman maintenance dan penguncian akses terjadwal */
+.maintenance-notice{margin:0 0 18px;padding:14px 15px;border:1px solid #f59e0b;border-radius:13px;background:linear-gradient(135deg,#451a03,#78350f);color:#fffbeb;font:14px/1.5 Arial,sans-serif;text-align:left;box-shadow:0 8px 22px #0005}
+.maintenance-notice strong{display:block;margin-bottom:5px;font-size:15px;color:#fde68a}
+.maintenance-countdown{display:flex;gap:7px;justify-content:center;margin-top:10px}
+.maintenance-countdown span{min-width:52px;padding:7px 5px;border-radius:8px;background:#1f2937;text-align:center;font-weight:700;font-size:18px;color:#fff}
+.maintenance-countdown small{display:block;font-size:10px;font-weight:400;color:#cbd5e1}
+.maintenance-lock{width:min(440px,100%);padding:28px 22px;border:1px solid #f59e0b;border-radius:20px;background:linear-gradient(160deg,#292016,#090b10);box-shadow:0 20px 60px #000b;text-align:center;font-family:Arial,sans-serif}
+.maintenance-lock .lock-icon{font-size:48px;margin-bottom:10px}
+.maintenance-lock h2{margin:0 0 10px;color:#fde68a;font-size:23px}
+.maintenance-lock p{color:#e5e7eb;line-height:1.6;font-size:14px}
+.maintenance-lock .maintenance-countdown{margin:18px 0}
+
 </style>
 </head>
 <body>
 <div class="initial-gate" id="initialGate">
+  <div class="maintenance-lock" id="maintenanceLock" hidden aria-live="polite">
+    <div class="lock-icon">🛠️</div>
+    <h2>WEBSITE SEMENTARA MAINTENANCE</h2>
+    <p>Website Alfamart P263/BK 0 Cipta Muda sedang dalam pemeliharaan terjadwal pada <b>27–30 November 2026</b>.<br>Akses login dan penggunaan website dikunci sementara. Silakan kembali setelah maintenance selesai.</p>
+    <div id="maintenanceLockCountdown" class="maintenance-countdown"></div>
+    <p style="font-size:12px;color:#cbd5e1;margin-bottom:0">Website dijadwalkan dibuka kembali 1 Desember 2026 pukul 00.00 WIB.</p>
+  </div>
   <form class="initial-login" id="initialLoginForm">
+    <div class="maintenance-notice" id="maintenanceNotice">
+      <strong>⚠️ PEMBERITAHUAN MAINTENANCE WEBSITE</strong>
+      Website akan menjalani maintenance pada <b>27–30 November 2026</b>. Selama periode tersebut, akses website akan dikunci sementara.
+      <div style="text-align:center;margin-top:8px">Hitung mundur menuju maintenance</div>
+      <div id="maintenanceCountdown" class="maintenance-countdown"></div>
+    </div>
     <h1>SELAMAT DATANG DI WEBSITE KHUSUS KARYAWAN ALFAMART P263/BK 0 CIPTA MUDA</h1>
     <p>Masukkan username, password, dan kode OTP Google Authenticator.</p>
     <label for="initialUsername">Username</label>
@@ -166,8 +192,33 @@ function unlockWebsite(){
 }
 document.body.style.overflow='hidden';
 
+// Jadwal menggunakan zona waktu resmi Asia/Jakarta (WIB).
+const MAINTENANCE_START = Date.parse('2026-11-26T17:00:00Z'); // 27 Nov 2026 00:00 WIB
+const MAINTENANCE_END = Date.parse('2026-11-30T17:00:00Z');   // 1 Des 2026 00:00 WIB
+const maintenanceActive = () => Date.now() >= MAINTENANCE_START && Date.now() < MAINTENANCE_END;
+function countdownMarkup(ms){
+  const total=Math.max(0,Math.floor(ms/1000));
+  const days=Math.floor(total/86400),hours=Math.floor((total%86400)/3600),minutes=Math.floor((total%3600)/60),seconds=total%60;
+  return `<span>${days}<small>HARI</small></span><span>${String(hours).padStart(2,'0')}<small>JAM</small></span><span>${String(minutes).padStart(2,'0')}<small>MENIT</small></span><span>${String(seconds).padStart(2,'0')}<small>DETIK</small></span>`;
+}
+function updateMaintenanceUI(){
+  const now=Date.now(), active=maintenanceActive();
+  const notice=document.getElementById('maintenanceNotice'), form=document.getElementById('initialLoginForm'), lock=document.getElementById('maintenanceLock');
+  if(active){
+    if(notice)notice.hidden=true; if(form)form.hidden=true; if(lock)lock.hidden=false;
+    const target=document.getElementById('maintenanceLockCountdown'); if(target)target.innerHTML=countdownMarkup(MAINTENANCE_END-now);
+    document.body.style.overflow='hidden';
+  }else{
+    if(lock)lock.hidden=true; if(form)form.hidden=false; if(notice)notice.hidden=false;
+    const target=document.getElementById('maintenanceCountdown'); if(target)target.innerHTML=countdownMarkup(MAINTENANCE_START-now);
+  }
+}
+updateMaintenanceUI();
+setInterval(updateMaintenanceUI,1000);
+
 document.getElementById('initialLoginForm').addEventListener('submit',async(e)=>{
   e.preventDefault();
+  if(maintenanceActive()){updateMaintenanceUI();return;}
   const username=document.getElementById('initialUsername').value.trim();
   const password=document.getElementById('initialPassword').value;
   const otp=document.getElementById('initialOtp').value.trim();
